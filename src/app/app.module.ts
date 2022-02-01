@@ -18,7 +18,11 @@ import { ClassesInputFileComponent } from './components/admin/files-inputs/class
 import { EnseignantsInputFileComponent } from './components/admin/files-inputs/enseignants-input-file/enseignants-input-file.component';
 import { DndDirective } from './_directives/dnd.directive';
 import { ProgressComponent } from './components/admin/files-inputs/progress/progress.component';
-import { UrlInputComponent } from './components/admin/files-inputs/url-input/url-input.component';
+import { FilesInputsDescriptionComponent } from './components/admin/files-inputs/files-inputs-description/files-inputs-description.component';
+import { FilieresListComponent } from './components/admin/schedule/filieres-list/filieres-list.component';
+import { CoursesComponent } from './components/admin/schedule/courses/courses.component';
+import { ClassesListComponent } from './components/admin/schedule/classes-list/classes-list.component';
+import { KnobComponent } from './components/admin/files-inputs/knob/knob.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,11 @@ import { UrlInputComponent } from './components/admin/files-inputs/url-input/url
     EnseignantsInputFileComponent,
     DndDirective,
     ProgressComponent,
-    UrlInputComponent
+    FilesInputsDescriptionComponent,
+    FilieresListComponent,
+    CoursesComponent,
+    ClassesListComponent,
+    KnobComponent
   ],
   imports: [
     BrowserModule,

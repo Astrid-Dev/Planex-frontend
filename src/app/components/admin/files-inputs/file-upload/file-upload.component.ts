@@ -10,6 +10,8 @@ import {FilesInputsService} from "../../../../_services/admin/files-inputs.servi
 })
 export class FileUploadComponent implements OnInit {
 
+  @Output("extract") result_string: EventEmitter<string> = new EventEmitter<string>();
+
   files: any[] = [];
   url = "";
   is_analysed: boolean = false;
@@ -111,13 +113,13 @@ export class FileUploadComponent implements OnInit {
 
     this.filesInputsService.read_file_with_blob(this.files[0])
       .then((res) =>{
-        console.log(res);
+        this.result_string.emit(res);
         this.is_read_file = false;
       })
       .catch((error) =>{
         console.error(error);
         this.is_read_file = false;
-      })
+      });
   }
 
   analyse_url(){
@@ -135,12 +137,11 @@ export class FileUploadComponent implements OnInit {
 
       this.filesInputsService.read_file_with_url(this.url)
         .then((res) =>{
-          console.log(res);
+          this.result_string.emit(res);
           this.is_analysed = false;
       })
         .catch((error) =>{
             this.is_analysed = false;
-            console.log(error.message);
             console.error(error);
         });
     }

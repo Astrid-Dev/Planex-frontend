@@ -8,7 +8,7 @@ import {NavigationEnd, Router} from "@angular/router";
 })
 export class SidemenuComponent implements OnInit {
 
-  current_menu = 0;
+  current_menu = -1;
 
   constructor(private router: Router) {
 
@@ -18,7 +18,6 @@ export class SidemenuComponent implements OnInit {
         if(event instanceof NavigationEnd)
         {
           const url = event.url;
-          console.log(url);
           switch (url) {
             case "/admin/files/filieres" :{
               this.current_menu = 1;
@@ -44,7 +43,15 @@ export class SidemenuComponent implements OnInit {
               this.current_menu = 6;
               break;
             }
-            default:{
+            case "/admin/schedule/courses" :{
+              this.current_menu = 7;
+              break;
+            }
+            case "/admin/home":{
+              this.current_menu = 0;
+              break;
+            }
+            case "/admin":{
               this.current_menu = 0;
               break;
             }
