@@ -10,12 +10,74 @@
             <h4 class="card-title">Fichier concernant les unités d'enseignement</h4>
             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
           </div>
-          <div class="card-body collapse in">
-            <div class="card-block">
+          <div class="card-body collapse in" *ngIf="!should_modify && can_upload && !is_sending">
+            <div class="card-block" *ngIf="!has_failed && ues.length > 0">
+
+              <h5 class="my-center">Statut: <mark>Un fichier a déjà été importé</mark></h5>
+            </div>
+
+            <div class="card-block" *ngIf="!has_failed && ues.length === 0">
 
               <h5 class="my-center">Statut: <mark>Aucun fichier importé</mark></h5>
 
               <app-file-upload (extract)="on_extract_datas($event)"></app-file-upload>
+            </div>
+
+            <div class="card-block" *ngIf="has_failed">
+              <div class="my-center flex-column">
+                <img src="assets/images/connection-close.png"/>
+                <h6 class="text-italic mt-2">Impossible de se connecter au serveur de données !</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body collapse in" *ngIf="!should_modify && can_upload && is_sending">
+            <app-knob [value]="value_of_progress" [message]="message"></app-knob>
+          </div>
+
+          <div class="card-body collapse in" *ngIf="!should_modify && !can_upload">
+            <div class="card-block" *ngIf="has_failed">
+              <div class="my-center flex-column">
+                <img width="200px" height="200px" src="../../../../../assets/template/app-assets/images/logo/employelogo3.jpg"/>
+                <h6 class="text-italic mt-2">Veuillez d'abord importer les fichiers concernant les classes !</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body collapse in" *ngIf="should_modify">
+            <div class="table-responsive">
+              <table class="table table-bordered mb-0">
+                <thead>
+                <tr>
+                  <th>Code de l'UE</th>
+                  <th>Intitulé</th>
+                  <th>Est optionnelle</th>
+                  <th>Classe</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let ue of bads_datas">
+                  <td class="width-200">{{ue.code}}</td>
+                  <td class="width-200">{{ue.intitule}}</td>
+                  <td class="width-200">{{ue.optionel ? "Oui" : "Non"}}</td>
+                  <td class="width-200">
+                    <select [(ngModel)]="ue.classe" class="select2-theme form-control" >
+                      <optgroup label="Valeur par défaut">
+                        <option [value]="ue.classe">{{ue.classe}}</option>
+                      </optgroup>
+                      <optgroup label="Valeurs possibles">
+                        <option *ngFor="let classe of get_loaded_classes()" [value]="classe.code">{{classe.code}}</option>
+                      </optgroup>
+                    </select>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-sm-12 mt-2">
+              <button class="btn btn-secondary" (click)="cancel_extraction()">Annuler</button>
+              <button class="btn btn-primary" (click)="continue_extraction()">Continuer</button>
             </div>
           </div>
         </div>

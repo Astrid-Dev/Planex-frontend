@@ -13,9 +13,9 @@ export class FilieresInputFileComponent implements OnInit {
   filieres: any = [];
   has_failed = true;
   is_sending = false;
-  value_of_progress = 100;
+  value_of_progress = 0;
   step = 0;
-  message = "Envoie des informations sur les enseignants";
+  message = "Envoie des informations sur les filières";
 
   constructor(private filesInputsService: FilesInputsService, private filiereService: FiliereService) { }
 
@@ -86,6 +86,7 @@ export class FilieresInputFileComponent implements OnInit {
 
   sending_is_finish_with_success()
   {
+    this.is_sending = false;
     Swal.fire({
       title: 'Données enregistrées!',
       text: "Les filières ont été importées avec succès !",

@@ -10,13 +10,28 @@
             <h4 class="card-title">Fichier concernant les filières</h4>
             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
           </div>
-          <div class="card-body collapse in">
-            <div class="card-block">
+          <div class="card-body collapse in" *ngIf="!is_sending">
+            <div class="card-block" *ngIf="!has_failed && filieres.length > 0">
+
+              <h5 class="my-center">Statut: <mark>Un fichier a déjà été importé</mark></h5>
+            </div>
+
+            <div class="card-block" *ngIf="!has_failed && filieres.length === 0">
 
               <h5 class="my-center">Statut: <mark>Aucun fichier importé</mark></h5>
 
               <app-file-upload (extract)="on_extract_datas($event)"></app-file-upload>
             </div>
+
+            <div class="card-block" *ngIf="has_failed">
+              <div class="my-center flex-column">
+                <img src="assets/images/connection-close.png"/>
+                <h6 class="text-italic mt-2">Impossible de se connecter au serveur de données !</h6>
+              </div>
+            </div>
+          </div>
+          <div class="card-body collapse in" *ngIf="is_sending">
+            <app-knob [value]="value_of_progress" [message]="message"></app-knob>
           </div>
         </div>
       </div>

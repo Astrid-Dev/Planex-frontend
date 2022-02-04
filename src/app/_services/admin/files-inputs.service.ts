@@ -187,6 +187,7 @@ export class FilesInputsService {
 
       const entete = datas[0];
       const number_of_lines = entete.split(",").length;
+      console.log(number_of_lines)
       if(number_of_lines !== 3 && number_of_lines !== 2)
       {
         reject("Fichier non conforme");
@@ -309,8 +310,12 @@ export class FilesInputsService {
           const new_classe:Classe = {
             id: i,
             code: code,
+            intitule: code,
             niveau: niveau,
-            filiere: filiere
+            filiere: filiere,
+            niveauId: 0,
+            filiereId: 0,
+            est_divisee: false,
           }
 
           result.push(new_classe);
@@ -355,14 +360,15 @@ export class FilesInputsService {
 
           const code = line[j].replace("\r", "").replace("\t", "").trim().toUpperCase();
           const intitule = line[j+1].replace("\r", "").replace("\t", "").trim();
-          const optionelle = line[j+2].replace("\r", "").replace("\t", "").trim().toLowerCase() === "non" ? false : true;
+          const optionel = line[j+2].replace("\r", "").replace("\t", "").trim().toLowerCase() === "non" ? false : true;
           const classe = line[j+3].replace("\r", "").replace("\t", "").trim();
           const new_ue:UE = {
             id: i,
             code: code,
             intitule: intitule,
-            optionelle: optionelle,
-            classe: classe
+            optionel: optionel,
+            classe: classe,
+            classeId: 0
           }
 
           result.push(new_ue);

@@ -14,7 +14,7 @@ export class EnseignantsInputFileComponent implements OnInit {
   enseignants: any = [];
   has_failed = true;
   is_sending = false;
-  value_of_progress = 100;
+  value_of_progress = 0;
   step = 0;
   message = "Envoie des informations sur les enseignants";
 
@@ -87,6 +87,7 @@ export class EnseignantsInputFileComponent implements OnInit {
 
   sending_is_finish_with_success()
   {
+    this.is_sending = false;
     Swal.fire({
       title: 'Données enregistrées!',
       text: "Les enseignants ont été importés avec succès !",

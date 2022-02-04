@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BACKEND_URL} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Filiere} from "../../models/Filiere";
@@ -8,7 +8,7 @@ const FILIERE_URL = BACKEND_URL + "filieres/";
 @Injectable({
   providedIn: 'root'
 })
-export class FiliereService {
+export class FiliereService{
 
   constructor(private http: HttpClient) { }
 

@@ -2,6 +2,7 @@ export interface UE{
   id: number,
   code: string,
   intitule: string,
-  optionelle: boolean,
-  classe: string
+  optionel: boolean,
+  classe: string,
+  classeId: number
 }
