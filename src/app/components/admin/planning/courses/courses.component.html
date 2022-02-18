@@ -1,0 +1,75 @@
+<div class="content-wrapper">
+  <div class="content-header row">
+
+  </div>
+  <div class="content-body">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-xs-12">
+        <div class="card">
+          <div class="card-header no-border-bottom">
+            <h4 class="card-title">
+              <i *ngIf="has_selected_filiere" class="fa fa-arrow-left cursor-pointer" (click)="previous_action()"></i>
+              Planning des cours
+            </h4>
+            <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+          </div>
+
+          <div class="card-body collapse in" *ngIf="!is_loading">
+            <div class="card-block" *ngIf="has_failed">
+              <app-connection-error></app-connection-error>
+            </div>
+
+            <div class="card-block" *ngIf="!can_plan && !has_failed">
+              <div class="my-center flex-column">
+                <img width="200px" height="200px" src="assets/template/app-assets/images/logo/employelogo3.jpg"/>
+                <h6 class="text-italic mt-2">Veuillez d'abord importer les fichiers demandés !</h6>
+              </div>
+            </div>
+
+            <div class="card-block" *ngIf="can_plan">
+
+                <div *ngIf="has_selected_filiere && !has_selected_horaire" class="my-center flex-column">
+                  <h5>Veuillez sélectionner le type d'horaires de la filière</h5>
+
+                  <div class="form-group">
+                    <fieldset class="radio" *ngFor="let horaire of horaires;">
+                      <label>
+                        <input type="radio" [id]="horaire.id" name="horaire" style="margin-right: 20px;" (change)="handle_type_horaire_change(horaire.id)"  [checked]="type_horaire === horaire.id.toString()"> {{get_horaire_description(horaire)}}
+                      </label>
+                    </fieldset>
+                  </div>
+
+                  <div class="form-group" *ngIf="!is_updating_filiere">
+                    <button class="btn btn-secondary" (click)="on_cancel_select_filiere()">Annuler</button>
+                    <button class="btn btn-primary" (click)="on_select_type_horaire()">Continuer</button>
+                  </div>
+                  <app-loader [size]="2" *ngIf="is_updating_filiere"></app-loader>
+                </div>
+
+                <app-filieres-list *ngIf="!has_selected_filiere" [list]="filieres" (select-filiere)="on_select_filiere($event)"></app-filieres-list>
+                <app-classes-list *ngIf="has_selected_filiere && has_selected_horaire && !has_selected_classe" (select-classe)="on_select_classe($event)" [list]="classes" [niveaux]="niveaux"></app-classes-list>
+                <app-time-table *ngIf="has_selected_classe"
+                                [all]="all_plannings" [all_ues]="ues"
+                                [current]="planning_for_classe"
+                                [classe]="classe" [jours]="jours"
+                                [periodes]="periodes" [all_salles]="salles"
+                                [all_enseignants]="enseignants"
+                                (on-modified)="perform_modify_planning_for_classe($event)"
+                ></app-time-table>
+            </div>
+
+          </div>
+          <div class="card-body collapse in" *ngIf="is_loading">
+            <div class="card-block">
+              <div class="my-center">
+                <app-loader [size]="5"></app-loader>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+

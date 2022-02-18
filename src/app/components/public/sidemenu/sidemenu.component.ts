@@ -18,6 +18,7 @@ export class SidemenuComponent implements OnInit {
         if(event instanceof NavigationEnd)
         {
           const url = event.url;
+          console.log(url);
           switch (url) {
             case "/admin/files/filieres" :{
               this.current_menu = 1;
@@ -43,7 +44,7 @@ export class SidemenuComponent implements OnInit {
               this.current_menu = 6;
               break;
             }
-            case "/admin/schedule/courses" :{
+            case "/admin/planning/courses" :{
               this.current_menu = 7;
               break;
             }
@@ -56,6 +57,8 @@ export class SidemenuComponent implements OnInit {
               break;
             }
           }
+
+          console.log(this.current_menu);
         }
       });
 

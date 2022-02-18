@@ -106,7 +106,9 @@ export class ClasseService {
             ...classes[i],
             index : i,
             filiere_is_bad: (filiere === null),
-            niveau_is_bad: (niveau === null)
+            niveau_is_bad: (niveau === null),
+            default_filiere_code: (filiere === null ? classes[i].filiere : filiere.code),
+            default_niveau_code: (niveau === null ? classes[i].niveau : niveau.code)
           }
         );
       }

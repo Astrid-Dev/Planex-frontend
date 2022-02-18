@@ -38,7 +38,7 @@
           <div class="card-body collapse in" *ngIf="!should_modify && !can_upload">
             <div class="card-block" *ngIf="has_failed">
               <div class="my-center flex-column">
-                <img width="200px" height="200px" src="../../../../../assets/template/app-assets/images/logo/employelogo3.jpg"/>
+                <img width="200px" height="200px" src="assets/template/app-assets/images/logo/employelogo3.jpg"/>
                 <h6 class="text-italic mt-2">Veuillez d'abord importer les fichiers concernant les classes !</h6>
               </div>
             </div>
@@ -63,7 +63,7 @@
                   <td class="width-200">
                     <select [(ngModel)]="ue.classe" class="select2-theme form-control" >
                       <optgroup label="Valeur par défaut">
-                        <option [value]="ue.classe">{{ue.classe}}</option>
+                        <option [value]="ue.default_classe_code">{{ue.default_classe_code}}</option>
                       </optgroup>
                       <optgroup label="Valeurs possibles">
                         <option *ngFor="let classe of get_loaded_classes()" [value]="classe.code">{{classe.code}}</option>

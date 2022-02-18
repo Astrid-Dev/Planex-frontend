@@ -1,0 +1,24 @@
+.list-contain{
+  padding: 20px;
+  .filiere-item{
+    background-color: #78909C;
+    color: #843534;
+    font-weight: bold;
+    font-size: x-large;
+    min-width: 100%;
+    min-height: 180px;
+
+    &:hover{
+      animation-delay: 2s;
+    }
+  }
+}
+
+.header-search{
+
+  i{
+    position: absolute;
+    right: 40px;
+    top: 10px;
+  }
+}

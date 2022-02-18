@@ -1,0 +1,79 @@
+<div class="col-lg-4 col-md-6 col-sm-12">
+  <div class="form-group">
+    <!-- Modal -->
+    <div class="modal fade text-xs-left" id="inputs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel35"
+         aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title" id="myModalLabel35"> {{jour + " de "+periode.debut + " à "+ periode.fin}}</h3>
+          </div>
+          <form>
+            <div class="modal-body">
+              <div class="row">
+                <fieldset class="col-md-8 pr-2 form-group floating-label-form-group">
+                  <label for="ue">UE</label>
+                  <app-autocomplete [placeholder]="'Unité d\'Enseignement'"
+                                    [data]="ues"
+                                    [notFound]="'Aucune UE trouvée avec ce code !'"
+                                    [keyword]="'code'"
+                                    [initialValue]="defaultItem.ue"
+                                    id="ue"
+                                    (on-select)="on_select_ue($event)"
+                  ></app-autocomplete>
+                </fieldset>
+              </div>
+              <div class="row">
+                <fieldset class="col-md-7 pr-3 form-group floating-label-form-group">
+                  <label for="salle">Salle</label>
+                  <app-autocomplete [placeholder]="'Salle de cours'"
+                                    [data]="salles"
+                                    [notFound]="'Aucune salle trouvée avec ce code !'"
+                                    [keyword]="'code'"
+                                    [initialValue]="defaultItem.salle"
+                                    id="salle"
+                                    (on-select)="on_select_salle($event)"
+                  ></app-autocomplete>
+                </fieldset>
+              </div>
+              <div class="row">
+                <fieldset class="col-md-6 form-group floating-label-form-group">
+                  <label for="ens1">Enseignant Prin.</label>
+                  <app-autocomplete [placeholder]="'Enseignant principal'"
+                                    [data]="enseignants"
+                                    [notFound]="'Aucun enseignant trouvé avec ce nom !'"
+                                    [keyword]="'noms'"
+                                    [initialValue]="defaultItem.enseignant"
+                                    id="ens1"
+                                    (on-select)="on_select_enseignant_principal($event)"
+                  ></app-autocomplete>
+                </fieldset>
+              </div>
+              <div class="row">
+                <fieldset class="col-md-4 form-group floating-label-form-group">
+                  <label for="ens2">Enseignant Sec.</label>
+                  <app-autocomplete [placeholder]="'Enseignant secondaire'"
+                                    [data]="enseignants2"
+                                    [notFound]="'Aucun enseignant trouvé avec ce nom !'"
+                                    [keyword]="'noms'"
+                                    [initialValue]="defaultItem.enseignant2"
+                                    id="ens2"
+                                    (on-select)="on_select_enseignant_secondaire($event)"
+                  ></app-autocomplete>
+                </fieldset>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                     value="Fermer">
+              <input type="button" class="btn btn-outline-primary" data-dismiss="modal" value="Enregistrer" (click)="on_confirm()">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

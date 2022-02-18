@@ -213,7 +213,8 @@ export class FilesInputsService {
           const new_filiere:Filiere = {
             id: i,
             code: code,
-            intitule: intitule === "" ? code : intitule
+            intitule: intitule === "" ? code : intitule,
+            typeHoraireId: null
           }
 
           result.push(new_filiere);

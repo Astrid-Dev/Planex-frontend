@@ -84,6 +84,7 @@ export class UeService {
             ...ues[i],
             index : i,
             classe_is_bad: true,
+            default_classe_code: ues[i].classe
           }
         );
       }
