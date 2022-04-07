@@ -23,6 +23,7 @@ export class FilieresListComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() =>{
+      this.all_filieres.sort((a: any, b: any) =>{return a.code.localeCompare(b.code)});
       this.current_list = this.all_filieres;
     }, 1)
   }

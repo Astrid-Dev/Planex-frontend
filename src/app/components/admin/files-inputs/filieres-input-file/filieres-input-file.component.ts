@@ -16,6 +16,7 @@ export class FilieresInputFileComponent implements OnInit {
   value_of_progress = 0;
   step = 0;
   message = "Envoie des informations sur les filières";
+  is_loading: boolean = true;
 
   constructor(private filesInputsService: FilesInputsService, private filiereService: FiliereService) { }
 
@@ -26,12 +27,14 @@ export class FilieresInputFileComponent implements OnInit {
           this.filieres = data;
           console.log(data);
           this.has_failed = false;
+          this.is_loading = false;
         }
       )
       .catch(
         (err) =>{
           console.error(err);
           this.has_failed = true;
+          this.is_loading = false;
         }
       )
   }

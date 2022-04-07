@@ -6,7 +6,7 @@ export const environment = {
   production: false
 };
 
-export const BACKEND_URL = "http://localhost:3100/api/";
+export const BACKEND_URL = "http://localhost:3200/api/";
 
 /*
  * For easier debugging in development mode, you can import the following file

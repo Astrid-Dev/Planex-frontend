@@ -6,7 +6,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button (click)="on_close()" type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             <h3 class="modal-title" id="myModalLabel35"> {{jour + " de "+periode.debut + " à "+ periode.fin}}</h3>
@@ -46,7 +46,7 @@
                                     [data]="enseignants"
                                     [notFound]="'Aucun enseignant trouvé avec ce nom !'"
                                     [keyword]="'noms'"
-                                    [initialValue]="defaultItem.enseignant"
+                                    [initialValue]="defaultItem.enseignant !== null ? defaultItem.enseignant : null"
                                     id="ens1"
                                     (on-select)="on_select_enseignant_principal($event)"
                   ></app-autocomplete>
@@ -67,7 +67,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <input type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+              <input (click)="on_close()" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
                      value="Fermer">
               <input type="button" class="btn btn-outline-primary" data-dismiss="modal" value="Enregistrer" (click)="on_confirm()">
             </div>

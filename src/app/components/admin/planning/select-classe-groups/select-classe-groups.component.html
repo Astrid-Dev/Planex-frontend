@@ -1,0 +1,55 @@
+<div class="my-center flex-column">
+  <h5>Renseignez les informations complémentaires sur la classe</h5>
+
+  <div class="form-group" *ngIf="!has_continued">
+    <fieldset class="radio">
+      <label>
+        <input type="radio" id="radio1" name="nbre_groupe" (change)="change_classe_groups_state(false)" style="margin-right: 20px;" [checked]="!classe_has_groups">
+        Laisser la classe telle qu'elle est (Ne pas diviser en groupes)
+      </label>
+    </fieldset>
+    <fieldset class="radio">
+      <label>
+        <input type="radio" id="radio2" name="nbre_groupe" (change)="change_classe_groups_state(true)" style="margin-right: 20px;" [checked]="classe_has_groups">
+        Diviser la classe en groupes
+      </label>
+    </fieldset>
+  </div>
+
+  <div *ngIf="classe_has_groups && has_continued" class="mt-2 mb-2">
+    <div class="row col-sm-12"  *ngFor="let group of groups; let i = index;">
+      <fieldset class="form-group col-md-4 col-sm-3">
+        <label [htmlFor]="'nom'+group.id">Nom du groupe</label>
+        <input class="form-control" [value]="group.nom" disabled="true" [id]="'nom'+group.id"/>
+      </fieldset>
+      <fieldset class="form-group col-md-2 col-sm-3">
+        <label [htmlFor]="'debut'+group.id">Lettre de début</label>
+        <select (change)="on_lettre_debut_change(group.id, $event)" [(ngModel)]="group.lettre_debut" class="form-control" [id]="'debut'+group.id" [value]="group.lettre_debut">
+          <option *ngFor="let value of group.possibles_letters_debut">{{value}}</option>
+        </select>
+      </fieldset>
+      <fieldset class="form-group col-md-2 col-sm-3">
+        <label [htmlFor]="'fin'+group.id">Lettre de fin</label>
+        <select (change)="on_lettre_fin_change(group.id, $event)" [(ngModel)]="group.lettre_fin" class="form-control" [id]="'fin'+group.id" [value]="group.lettre_fin">
+          <option *ngFor="let value of group.possibles_letters_fin">{{value}}</option>
+        </select>
+      </fieldset>
+      <fieldset class="form-group col-md-3 col-sm-3">
+        <label [htmlFor]="'nombre'+group.id">Nombre d'étudiants</label>
+        <input class="form-control" placeholder="0" [value]="group.nbre_etudiants" disabled="true" [id]="'nombre'+group.id"/>
+      </fieldset>
+      <div class="form-group col-md-1 col-sm-12 my-center" style="height: 100%; padding-top: 27px">
+        <label></label>
+        <i *ngIf="i >= 2" class="text-danger fa fa-times fa-2x cursor-pointer" (click)="remove_one_groupe(group.id)"></i>
+      </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <button type="button" class="btn btn-min-width btn-outline-success" (click)="add_new_group()"><i class="fa fa-plus"></i> Nouveau groupe</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-secondary" (click)="on_cancel()">Annuler</button>
+    <button class="btn btn-primary" (click)="on_continue()">Continuer</button>
+  </div>
+  <app-loader *ngIf="is_loading" [size]="2"></app-loader>
+</div>

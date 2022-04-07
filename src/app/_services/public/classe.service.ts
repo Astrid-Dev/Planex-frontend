@@ -7,10 +7,12 @@ import {NiveauService} from "./niveau.service";
 import {Filiere} from "../../models/Filiere";
 import {Niveau} from "../../models/Niveau";
 import {UE} from "../../models/UE";
+import {Etudiant} from "../../models/Etudiant";
 
 const CLASSE_URL = BACKEND_URL + "classes/";
+const CLASSE_WITH_ETD_URL = BACKEND_URL + "classes/withetudiants";
 
-export type Attribution_Result = {has_attributed: boolean, result: Classe[] | UE[], bads: Classe[]}
+export type Attribution_Result = {has_attributed: boolean, result: Classe[] | UE[] | Etudiant[], bads: Classe[]}
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +42,20 @@ export class ClasseService {
     });
   }
 
+  getAllClassesWithEtudiants(){
+    return new Promise<Classe[] | Object>((resolve, reject) =>{
+      this.http.get(CLASSE_WITH_ETD_URL)
+        .subscribe(
+          res =>{
+            resolve(res);
+          },
+          err =>{
+            reject(err);
+          }
+        )
+    });
+  }
+
   createNewClasse(data: Classe){
     return new Promise((resolve, reject) => {
       this.http.post(CLASSE_URL, data)
@@ -52,6 +68,20 @@ export class ClasseService {
           }
         )
     });
+  }
+
+  updateOneClasse(data: any, id: number){
+    return new Promise(((resolve, reject) => {
+      this.http.put(CLASSE_URL+""+id+"/", data)
+        .subscribe(
+          res =>{
+            resolve(res);
+          },
+          err =>{
+            reject(err);
+          }
+        )
+    }));
   }
 
   canUploadClassesFile()

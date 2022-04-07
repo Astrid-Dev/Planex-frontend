@@ -48,7 +48,8 @@
 
                 <app-filieres-list *ngIf="!has_selected_filiere" [list]="filieres" (select-filiere)="on_select_filiere($event)"></app-filieres-list>
                 <app-classes-list *ngIf="has_selected_filiere && has_selected_horaire && !has_selected_classe" (select-classe)="on_select_classe($event)" [list]="classes" [niveaux]="niveaux"></app-classes-list>
-                <app-time-table *ngIf="has_selected_classe"
+                <app-select-classe-groups [classe]="this.classe" (on_cancel)="previous_action()" (on_continue)="on_select_classe_groups($event)" *ngIf="has_selected_classe && !has_selected_type_groupe"></app-select-classe-groups>
+                <app-time-table *ngIf="has_selected_classe && has_selected_type_groupe"
                                 [all]="all_plannings" [all_ues]="ues"
                                 [current]="planning_for_classe"
                                 [classe]="classe" [jours]="jours"

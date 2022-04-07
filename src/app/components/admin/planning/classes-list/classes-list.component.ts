@@ -25,6 +25,7 @@ export class ClassesListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.all_classes.sort((a: any, b: any) =>{return a.code.localeCompare(b.code)})
     this.current_list = this.all_classes;
     this.niveaux.sort((a, b) => {
       return a.code.localeCompare(b.code);

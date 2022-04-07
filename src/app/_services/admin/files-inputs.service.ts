@@ -7,6 +7,7 @@ import {Filiere} from "../../models/Filiere";
 import { Niveau } from 'src/app/models/Niveau';
 import {Classe} from "../../models/Classe";
 import {UE} from "../../models/UE";
+import {Etudiant} from "../../models/Etudiant";
 
 @Injectable({
   providedIn: 'root'
@@ -286,7 +287,7 @@ export class FilesInputsService {
 
       const entete = datas[0];
       const number_of_lines = entete.split(",").length;
-      if(number_of_lines !== 4 && number_of_lines !== 3)
+      if(number_of_lines !== 5 && number_of_lines !== 4)
       {
         reject("Fichier non conforme");
       }
@@ -300,18 +301,19 @@ export class FilesInputsService {
 
           let j = 0;
 
-          if(number_of_lines === 4)
+          if(number_of_lines === 5)
           {
             ++j;
           }
 
           const code = line[j].replace("\r", "").replace("\t", "").trim().toUpperCase();
-          const niveau = line[j+1].replace("\r", "").replace("\t", "").trim();
-          const filiere = line[j+2].replace("\r", "").replace("\t", "").trim();
+          const intitule = line[j+1].replace("\r", "").replace("\t", "").trim();
+          const niveau = line[j+2].replace("\r", "").replace("\t", "").trim();
+          const filiere = line[j+3].replace("\r", "").replace("\t", "").trim();
           const new_classe:Classe = {
             id: i,
             code: code,
-            intitule: code,
+            intitule: intitule === "" ? code : intitule,
             niveau: niveau,
             filiere: filiere,
             niveauId: 0,
@@ -383,4 +385,55 @@ export class FilesInputsService {
     });
   }
 
+  extract_data_from_etudiants_file(data_string: string)
+  {
+    console.log(data_string);
+    return new Promise<Etudiant[]>((resolve, reject) =>{
+      const datas = data_string.split("\n");
+      let result : Etudiant[] = [];
+      let i = 1;
+
+      const entete = datas[0];
+      const number_of_lines = entete.split(",").length;
+      if(number_of_lines !== 4 && number_of_lines !== 3)
+      {
+        reject("Fichier non conforme");
+      }
+      else
+      {
+        //the file doesn't contain the horodating column if number of lines = 4 and it contain the horodating column else
+
+        while(i < datas.length)
+        {
+          const line = datas[i].split(",");
+
+          let j = 0;
+
+          if(number_of_lines === 4)
+          {
+            ++j;
+          }
+
+          const noms = line[j].replace("\r", "").replace("\t", "").trim().toUpperCase();
+          const matricule = line[j+1].replace("\r", "").replace("\t", "").trim().toUpperCase();
+          const classe = line[j+2].replace("\r", "").replace("\t", "").trim().toUpperCase();
+
+          const new_etd:Etudiant = {
+            id: i,
+            noms: noms,
+            matricule: matricule,
+            classeId: 0,
+            classe: classe,
+          }
+
+          result.push(new_etd);
+          ++i;
+        }
+
+        resolve(result);
+
+      }
+
+    });
+  }
 }

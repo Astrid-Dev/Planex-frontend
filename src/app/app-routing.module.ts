@@ -9,6 +9,7 @@ import {ClassesInputFileComponent} from "./components/admin/files-inputs/classes
 import {NiveauxInputFileComponent} from "./components/admin/files-inputs/niveaux-input-file/niveaux-input-file.component";
 import {SallesInputFileComponent} from "./components/admin/files-inputs/salles-input-file/salles-input-file.component";
 import {CoursesComponent} from "./components/admin/planning/courses/courses.component";
+import {EtudiantsInputFileComponent} from "./components/admin/files-inputs/etudiants-input-file/etudiants-input-file.component";
 
 const routes: Routes = [
   { path: 'admin',
@@ -23,6 +24,7 @@ const routes: Routes = [
           { path: 'classes', component: ClassesInputFileComponent },
           { path: 'niveaux', component: NiveauxInputFileComponent },
           { path: 'salles', component: SallesInputFileComponent },
+          { path: 'etudiants', component: EtudiantsInputFileComponent },
         ]
       },
       {

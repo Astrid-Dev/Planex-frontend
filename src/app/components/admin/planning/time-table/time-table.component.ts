@@ -1,5 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ElementRef, ViewChild} from '@angular/core';
 import {Classe, defaultClasse} from "../../../../models/Classe";
+
+declare var require: any;
+
+const pdfMake = require('pdfmake/build/pdfmake.js');
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
+const htmlToPdfmake = require("html-to-pdfmake");
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-time-table',
@@ -7,6 +14,9 @@ import {Classe, defaultClasse} from "../../../../models/Classe";
   styleUrls: ['./time-table.component.scss']
 })
 export class TimeTableComponent implements OnInit {
+	
+  @ViewChild('pdfTable')
+  pdfTable!: ElementRef;
 
   @Input() classe : any = defaultClasse;
   @Input() jours: any = [];
@@ -82,6 +92,7 @@ export class TimeTableComponent implements OnInit {
     this.current_period = this.periodes[period_index];
     this.current_planning_index = ((this.jours.length * period_index) + day_index);
     this.current_planning_ceil = this.planning[this.current_planning_index];
+    console.log(this.current_planning_ceil);
   }
 
   get_enseignant_name(period_index: number, day_index: number)
@@ -89,7 +100,7 @@ export class TimeTableComponent implements OnInit {
     const index = (this.jours.length * period_index) + day_index;
     if(this.planning[index].enseignant === null)
       return "";
-    else return this.planning[index].enseignant.noms;
+    else return typeof this.planning[index].enseignant !== "undefined" ? this.planning[index].enseignant.noms : "";
   }
 
   get_enseignant2_name(period_index: number, day_index: number)
@@ -97,7 +108,7 @@ export class TimeTableComponent implements OnInit {
     const index = (this.jours.length * period_index) + day_index;
     if(this.planning[index].enseignant2 === null)
       return "";
-    else return this.planning[index].enseignant2.noms;
+    else return typeof this.planning[index].enseignant2 !== "undefined" ? this.planning[index].enseignant2.noms : "";
   }
 
   get_ue_code(period_index: number, day_index: number)
@@ -105,7 +116,7 @@ export class TimeTableComponent implements OnInit {
     const index = (this.jours.length * period_index) + day_index;
     if(this.planning[index].ue === null)
       return "";
-    else return this.planning[index].ue.code;
+    else return typeof this.planning[index].ue !== "undefined" ? this.planning[index].ue.code : "";
   }
 
   get_salle_code(period_index: number, day_index: number)
@@ -113,7 +124,7 @@ export class TimeTableComponent implements OnInit {
     const index = (this.jours.length * period_index) + day_index;
     if(this.planning[index].salle === null)
       return "";
-    else return this.planning[index].salle.code;
+    else return typeof this.planning[index].salle !== "undefined" ? this.planning[index].salle.code : "";
   }
 
   on_apply_modification()
@@ -129,6 +140,19 @@ export class TimeTableComponent implements OnInit {
       ...this.planning[this.current_planning_index],
       ...result,
     }
+  }
+  
+  public downloadAsPDF() {
+    const pdfTable = this.pdfTable.nativeElement;
+    var html = htmlToPdfmake(pdfTable.innerHTML);
+    const documentDefinition = { content: html, pageSize: 'A4', pageOrientation: "landscape", pageMargins: [ 10, 10, 10, 10 ], info: {
+    title: "emploi_de_temps_"+this.classe_name,
+    author: 'Planex',
+    subject: 'Course plannings',
+    keywords: 'planning, course',
+  } };
+    pdfMake.createPdf(documentDefinition).download("emploi_de_temps_"+this.classe_name); 
+     
   }
 
 }

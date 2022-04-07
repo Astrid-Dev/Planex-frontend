@@ -11,12 +11,12 @@
             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
           </div>
           <div class="card-body collapse in" *ngIf="!is_loading && !should_modify && can_upload && !is_sending">
-            <div class="card-block" *ngIf="!has_failed && ues.length > 0">
+            <div class="card-block" *ngIf="!has_failed && etudiants.length > 0">
 
               <h5 class="my-center">Statut: <mark>Un fichier a déjà été importé</mark></h5>
             </div>
 
-            <div class="card-block" *ngIf="!has_failed && ues.length === 0">
+            <div class="card-block" *ngIf="!has_failed && etudiants.length === 0">
 
               <h5 class="my-center">Statut: <mark>Aucun fichier importé</mark></h5>
 
@@ -49,21 +49,19 @@
               <table class="table table-bordered mb-0">
                 <thead>
                 <tr>
-                  <th>Code de l'UE</th>
-                  <th>Intitulé</th>
-                  <th>Est optionnelle</th>
+                  <th>Matricule</th>
+                  <th>Noms et Prénoms</th>
                   <th>Classe</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let ue of bads_datas">
-                  <td class="width-200">{{ue.code}}</td>
-                  <td class="width-200">{{ue.intitule}}</td>
-                  <td class="width-200">{{ue.optionel ? "Oui" : "Non"}}</td>
+                <tr *ngFor="let etudiant of bads_datas">
+                  <td class="width-200">{{etudiant.matricule}}</td>
+                  <td class="width-200">{{etudiant.noms}}</td>
                   <td class="width-200">
-                    <select [(ngModel)]="ue.classe" class="select2-theme form-control" >
+                    <select [(ngModel)]="etudiant.classe" class="select2-theme form-control" >
                       <optgroup label="Valeur par défaut">
-                        <option [value]="ue.default_classe_code">{{ue.default_classe_code}}</option>
+                        <option [value]="etudiant.default_classe_code">{{etudiant.default_classe_code}}</option>
                       </optgroup>
                       <optgroup label="Valeurs possibles">
                         <option *ngFor="let classe of get_loaded_classes()" [value]="classe.code">{{classe.code}}</option>

@@ -56,6 +56,22 @@ export class InputsModalComponent implements OnInit {
   on_confirm()
   {
     this.confirm.emit(this.result);
+    this.on_close();
+  }
+
+  on_close()
+  {
+    this.result = {
+      ueId: null,
+      ue: null,
+      salleId: null,
+      salle: null,
+      enseignantId: null,
+      enseignant: null,
+      enseignant2Id: null,
+      enseignant2: null
+    }
+
   }
 
 }

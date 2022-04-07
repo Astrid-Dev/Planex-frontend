@@ -31,6 +31,8 @@ import { LoaderComponent } from './components/public/loader/loader.component';
 import { CourseHeaderPlanningComponent } from './components/public/course-header-planning/course-header-planning.component';
 import { InputsModalComponent } from './components/admin/planning/inputs-modal/inputs-modal.component';
 import { AutocompleteComponent } from './components/public/autocomplete/autocomplete.component';
+import { EtudiantsInputFileComponent } from './components/admin/files-inputs/etudiants-input-file/etudiants-input-file.component';
+import { SelectClasseGroupsComponent } from './components/admin/planning/select-classe-groups/select-classe-groups.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { AutocompleteComponent } from './components/public/autocomplete/autocomp
     LoaderComponent,
     CourseHeaderPlanningComponent,
     InputsModalComponent,
-    AutocompleteComponent
+    AutocompleteComponent,
+    EtudiantsInputFileComponent,
+    SelectClasseGroupsComponent
   ],
   imports: [
     BrowserModule,

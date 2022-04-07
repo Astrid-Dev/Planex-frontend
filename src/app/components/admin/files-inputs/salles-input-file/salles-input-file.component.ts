@@ -17,6 +17,8 @@ export class SallesInputFileComponent implements OnInit {
   step = 0;
   message = "Envoie des informations sur les salles";
 
+  is_loading: boolean = true;
+
   constructor(private filesInputsService: FilesInputsService, private salleService: SalleService) { }
 
   ngOnInit(): void {
@@ -26,12 +28,14 @@ export class SallesInputFileComponent implements OnInit {
           this.salles = data;
           console.log(data);
           this.has_failed = false;
+          this.is_loading = false;
         }
       )
       .catch(
         (err) =>{
           console.error(err);
           this.has_failed = true;
+          this.is_loading = false;
         }
       );
   }

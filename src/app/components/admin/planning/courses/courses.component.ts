@@ -8,6 +8,8 @@ import {Enseignant} from "../../../../models/Enseignant";
 import {UE} from "../../../../models/UE";
 import {FiliereService} from "../../../../_services/public/filiere.service";
 import Swal from "sweetalert2";
+import {ClasseService} from "../../../../_services/public/classe.service";
+import {GroupesCoursService} from "../../../../_services/public/groupes-cours.service";
 
 
 @Component({
@@ -23,7 +25,10 @@ export class CoursesComponent implements OnInit {
   has_selected_filiere: boolean = false;
   has_selected_classe: boolean = false;
   has_selected_horaire: boolean = false;
+  has_selected_type_groupe: boolean = false;
+
   is_updating_filiere:boolean = false;
+
   is_loading: boolean = true;
 
   type_horaire: string = "1";
@@ -38,15 +43,19 @@ export class CoursesComponent implements OnInit {
   horaires: any = [];
   periodes: any = [];
 
-  classe !: Classe;
+  classe : any;
   current_filiere !: Filiere;
+
+  classe_has_groups: boolean = false;
 
   all_plannings: any = [];
   planning_for_classe: any = [];
 
   constructor(
     private planningCoursesService: PlanningCoursesService,
-    private filiereService: FiliereService
+    private classeService: ClasseService,
+    private filiereService: FiliereService,
+    private groupesCoursService: GroupesCoursService
   ) { }
 
   ngOnInit(): void {
@@ -88,21 +97,7 @@ export class CoursesComponent implements OnInit {
       typeHoraireId: filiere.typeHoraireId
     }
 
-    filiere.classes.forEach((classe: any) =>{
-      classe = {
-        ...classe,
-        niveau: this.getNiveauById(classe.niveauId),
-        ues: this.getUesByClasseId(classe.id),
-        filiere: {
-          id: filiere.id,
-          code: filiere.code,
-          intitule: filiere.intitule,
-          typeHoraireId: filiere.typeHoraireId
-        }
-      }
-      classes.push(classe);
-    });
-    this.classes = classes;
+    this.classes = this.planningCoursesService.getAllClassesOfOneFiliere(filiere.id);
     this.has_selected_filiere = true;
 
     if(this.current_filiere.typeHoraireId !== null)
@@ -112,47 +107,27 @@ export class CoursesComponent implements OnInit {
     }
   }
 
-  getNiveauById(id: number): Niveau{
-    let result: Niveau = defaultNiveau;
-
-    for(let i = 0; i < this.niveaux.length; i++)
-    {
-      if(this.niveaux[i].id === id)
-      {
-        result = this.niveaux[i];
-        break;
-      }
-    }
-
-    return result;
-  }
-
-  getUesByClasseId(classeId: number){
-    let result: any = [];
-
-    this.ues.forEach((ue: UE) =>{
-      if(ue.classeId === classeId)
-      {
-        result.push(ue);
-      }
-    });
-    return result;
-  }
-
-  on_select_classe(classe: Classe)
+  on_select_classe(classe: any)
   {
     this.classe = classe;
     this.has_selected_classe = true;
+    if(!classe.est_divisee && (classe.createdAt === classe.updatedAt))
+    {
+      this.has_selected_type_groupe = false;
+    }
+    else
+    {
+      this.classe_has_groups = classe.est_divisee;
+      this.has_selected_type_groupe = true;
+    }
     this.is_loading = true;
     this.planningCoursesService.getCoursesPlanningForAllClasses()
       .then((plannings) =>{
         this.all_plannings = plannings;
-        console.log(plannings);
         this.planningCoursesService.getCoursesPlanningForOneClasse(this.classe.id)
           .then((classe_pl) =>{
             this.planning_for_classe = classe_pl;
             this.is_loading = false;
-            console.log(classe_pl);
           })
           .catch((err) =>{
             this.fetching_classe_has_failed(err);
@@ -160,7 +135,68 @@ export class CoursesComponent implements OnInit {
       })
       .catch((err) =>{
         this.fetching_classe_has_failed(err);
+      });
+    console.log(classe);
+  }
+
+  on_select_classe_groups(groups: any)
+  {
+    this.classe_has_groups = (groups.length > 0);
+    let temp = {
+      filiereId: this.classe.filiereId,
+      code: this.classe.code,
+      est_divisee: this.classe_has_groups,
+      intitule: this.classe.intitule,
+      niveauId: this.classe.niveauId,
+      id: this.classe.id
+    };
+
+    this.is_loading = true;
+    this.classeService.updateOneClasse(temp, temp.id)
+      .then((res) =>{
+        if(this.classe_has_groups)
+        {
+          let data: any = [];
+          groups.forEach((group: any) =>{
+            data.push({
+              id: group.id,
+              nom: group.nom,
+              lettre_debut: group.lettre_debut,
+              lettre_fin: group.lettre_fin,
+              classeId: this.classe.id
+            })
+          });
+          this.groupesCoursService.createGroupsForOneClasse(data)
+            .then((res) =>{
+              this.has_selected_type_groupe = true;
+              this.classe = {
+                ...this.classe,
+                groupes_cours: data,
+                updatedAt: new Date().toLocaleDateString()
+              }
+              this.update_one_classe_from_all_classes(this.classe);
+              this.is_loading = false;
+            })
+            .catch((err) =>{
+              this.updating_classe_has_failed(err);
+            });
+        }
+        else
+        {
+          this.has_selected_type_groupe = true;
+          this.classe = {
+            ...this.classe,
+            groupes_cours: [],
+            updatedAt: new Date().toLocaleDateString()
+          }
+          this.update_one_classe_from_all_classes(this.classe);
+          this.is_loading = false;
+        }
       })
+      .catch((err) =>{
+        this.updating_classe_has_failed(err);
+      })
+
   }
 
   get_horaire_description(horaire: any): string
@@ -225,7 +261,6 @@ export class CoursesComponent implements OnInit {
               .then((res) =>{
                 plannings[j] = res;
                 ++plannings_sends;
-                console.log(res);
                 if(classes_sends === this.classes.length && plannings_sends === plannings.length)
                 {
                   this.has_selected_horaire = true;
@@ -270,6 +305,17 @@ export class CoursesComponent implements OnInit {
     });
   }
 
+  updating_classe_has_failed(err: any){
+    this.is_loading = false;
+    console.error(err);
+    Swal.fire({
+      title: 'Erreur!',
+      text: "Une erreur s'est produite lors de la mise à jour des données de la classe !",
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+  }
+
   on_cancel_select_filiere()
   {
     this.has_selected_filiere = false;
@@ -291,20 +337,7 @@ export class CoursesComponent implements OnInit {
   perform_modify_planning_for_classe(new_planning_for_classe: any)
   {
     this.is_loading = true;
-    let plannings_to_update: any = [];
-
-    this.planning_for_classe.forEach((plan1: any) =>{
-      for(let i = 0; i < new_planning_for_classe.length; i++)
-      {
-        const plan2 = new_planning_for_classe[i];
-
-        if(plan1.id === plan1.id && (plan1.ueId !== plan2.ueId || plan1.enseignantId !== plan2.enseignantId || plan1.salleId !== plan2.salleId))
-        {
-          plannings_to_update.push(plan2);
-          break;
-        }
-      }
-    })
+    let plannings_to_update = new_planning_for_classe;
 
     let sends_rows = 0;
     for(let i = 0; i < plannings_to_update.length; i++)
@@ -377,6 +410,45 @@ export class CoursesComponent implements OnInit {
       icon: 'success',
       confirmButtonText: 'OK'
     });
+  }
+
+  getNiveauById(id: number): Niveau{
+    let result: Niveau = defaultNiveau;
+
+    for(let i = 0; i < this.niveaux.length; i++)
+    {
+      if(this.niveaux[i].id === id)
+      {
+        result = this.niveaux[i];
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  getUesByClasseId(classeId: number){
+    let result: any = [];
+
+    this.ues.forEach((ue: UE) =>{
+      if(ue.classeId === classeId)
+      {
+        result.push(ue);
+      }
+    });
+    return result;
+  }
+
+  update_one_classe_from_all_classes(classe: any)
+  {
+    for(let i = 0; i < this.classes.length; i++)
+    {
+      if(classe.id === this.classes[i].id)
+      {
+        this.classes[i] = classe;
+        break;
+      }
+    }
   }
 
 }

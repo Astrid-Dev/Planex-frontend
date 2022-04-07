@@ -1,28 +1,31 @@
+<div id="pdfTable" #pdfTable>
 <app-course-header-planning [classe]="classe_name" [filiere]="filiere_name"></app-course-header-planning>
 <div class="table-responsive">
   <table class="table table-bordered mb-0 table-hover">
-    <thead>
-    <tr>
-      <th>Heures</th>
-      <th *ngFor="let jour of jours;">{{jour.intitule}}</th>
-    </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let periode of periodes; let period_index = index;">
-        <th>{{periode.debut + " - " + periode.fin}}</th>
-        <td *ngFor="let jour of jours; let day_index = index;" data-toggle="modal" (click)="on_ceil_click(day_index, period_index)"
-            data-target="#inputs">
-          <div *ngIf="get_ue_code(period_index, day_index) !== ''">{{get_ue_code(period_index, day_index)}}</div>
-          <div *ngIf="get_salle_code(period_index, day_index) !== ''">{{get_salle_code(period_index, day_index)}}</div>
-          <div *ngIf="get_enseignant_name(period_index, day_index) !== ''">{{get_enseignant_name(period_index, day_index)}}{{get_enseignant2_name(period_index, day_index) !== "" ? " // " : ""}}</div>
-          <div *ngIf="get_enseignant2_name(period_index, day_index) !== ''">{{get_enseignant2_name(period_index, day_index)}}</div>
-        </td>
-      </tr>
-    </tbody>
+	<thead>
+	<tr>
+	  <th>Heures</th>
+	  <th *ngFor="let jour of jours;">{{jour.intitule}}</th>
+	</tr>
+	</thead>
+	<tbody>
+	  <tr *ngFor="let periode of periodes; let period_index = index;">
+		<th>{{periode.debut + " - " + periode.fin}}</th>
+		<td *ngFor="let jour of jours; let day_index = index;" data-toggle="modal" (click)="on_ceil_click(day_index, period_index)"
+			data-target="#inputs">
+		  <div *ngIf="get_ue_code(period_index, day_index) !== ''">{{get_ue_code(period_index, day_index)}}</div>
+		  <div *ngIf="get_salle_code(period_index, day_index) !== ''">{{get_salle_code(period_index, day_index)}}</div>
+		  <div *ngIf="get_enseignant_name(period_index, day_index) !== ''">{{get_enseignant_name(period_index, day_index)}}{{get_enseignant2_name(period_index, day_index) !== "" ? " // " : ""}}</div>
+		  <div *ngIf="get_enseignant2_name(period_index, day_index) !== ''">{{get_enseignant2_name(period_index, day_index)}}</div>
+		</td>
+	  </tr>
+	</tbody>
   </table>
 </div>
-<div class="col-sm-6 mt-2">
+</div>
+<div class="col-sm-6 mt-2 buttons">
   <button class="btn btn-primary" (click)="on_apply_modification()">Sauvegarder</button>
+  <button class="btn btn-success" (click)="downloadAsPDF()"><i class="fa fa-file-pdf-o"></i> Exporter</button>
 </div>
 <app-inputs-modal
   [jour]="current_day" [periode]="current_period"

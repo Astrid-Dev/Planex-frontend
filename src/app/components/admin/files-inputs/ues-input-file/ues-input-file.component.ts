@@ -20,6 +20,7 @@ export class UesInputFileComponent implements OnInit {
   step = 0;
   can_upload = false;
   message = "Envoie des informations sur les Unités d'enseignement";
+  is_loading: boolean = true;
   should_modify = false;
   extract_datas: any = [];
   bads_datas: any = [];
@@ -40,12 +41,14 @@ export class UesInputFileComponent implements OnInit {
                   this.ues = data;
                   console.log(data);
                   this.has_failed = false;
+                  this.is_loading = false;
                 }
               )
               .catch(
                 (err) =>{
                   console.error(err);
                   this.has_failed = true;
+                  this.is_loading = false;
                 }
               );
           }
@@ -56,13 +59,14 @@ export class UesInputFileComponent implements OnInit {
               text: "Veuillez d'abord importer les fichiers concernant les classes !",
               icon: 'warning',
               confirmButtonText: 'OK'
-            });
+            }).then(() =>{this.is_loading = false;});
           }
 
         }
       )
       .catch(err =>{
         console.error(err);
+        this.is_loading = false;
       })
   }
 

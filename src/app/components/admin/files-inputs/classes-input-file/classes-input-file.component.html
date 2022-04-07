@@ -10,7 +10,7 @@
             <h4 class="card-title">Fichier concernant les Classes</h4>
             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
           </div>
-          <div class="card-body collapse in" *ngIf="!should_modify && can_upload && !is_sending">
+          <div class="card-body collapse in" *ngIf="!is_loading && !should_modify && can_upload && !is_sending">
             <div class="card-block" *ngIf="!has_failed && classes.length > 0">
 
               <h5 class="my-center">Statut: <mark>Un fichier a déjà été importé</mark></h5>
@@ -31,11 +31,11 @@
             </div>
           </div>
 
-          <div class="card-body collapse in" *ngIf="!should_modify && can_upload && is_sending">
+          <div class="card-body collapse in" *ngIf="!is_loading && !should_modify && can_upload && is_sending">
             <app-knob [value]="value_of_progress" [message]="message"></app-knob>
           </div>
 
-          <div class="card-body collapse in" *ngIf="!should_modify && !can_upload">
+          <div class="card-body collapse in" *ngIf="!is_loading && !should_modify && !can_upload">
             <div class="card-block" *ngIf="has_failed">
               <div class="my-center flex-column">
                 <img width="200px" height="200px" src="assets/template/app-assets/images/logo/employelogo3.jpg"/>
@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <div class="card-body collapse in" *ngIf="should_modify">
+          <div class="card-body collapse in" *ngIf="!is_loading && should_modify">
             <div class="table-responsive">
               <table class="table table-bordered mb-0">
                 <thead>
@@ -89,6 +89,14 @@
             <div class="col-sm-12 mt-2">
               <button class="btn btn-secondary" (click)="cancel_extraction()">Annuler</button>
               <button class="btn btn-primary" (click)="continue_extraction()">Continuer</button>
+            </div>
+          </div>
+
+          <div class="card-body collapse in" *ngIf="is_loading">
+            <div class="card-block">
+              <div class="my-center">
+                <app-loader [size]="5"></app-loader>
+              </div>
             </div>
           </div>
 

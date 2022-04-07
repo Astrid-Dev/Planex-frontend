@@ -1,47 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import {FilesInputsService} from "../../../../_services/admin/files-inputs.service";
 import Swal from "sweetalert2";
+import {EtudiantService} from "../../../../_services/public/etudiant.service";
+import {Etudiant} from "../../../../models/Etudiant";
 import deleteProperty = Reflect.deleteProperty;
-import {ClasseService} from "../../../../_services/public/classe.service";
-import {Classe} from "../../../../models/Classe";
 
 @Component({
-  selector: 'app-classes-input-file',
-  templateUrl: './classes-input-file.component.html',
-  styleUrls: ['./classes-input-file.component.scss']
+  selector: 'app-etudiants-input-file',
+  templateUrl: './etudiants-input-file.component.html',
+  styleUrls: ['./etudiants-input-file.component.scss']
 })
-export class ClassesInputFileComponent implements OnInit {
+export class EtudiantsInputFileComponent implements OnInit {
 
-  classes: any = [];
+
+  etudiants: any = [];
   has_failed = true;
   is_sending = false;
   value_of_progress = 0;
   step = 0;
   can_upload = false;
-  message = "Envoie des informations sur les classes";
+  message = "Envoie des informations sur les étudiants";
   should_modify = false;
   extract_datas: any = [];
   bads_datas: any = [];
 
   is_loading: boolean = true;
 
-  constructor(
-    private filesInputsService: FilesInputsService,
-    private classeService: ClasseService
-  ) { }
+  constructor(private filesInputsService: FilesInputsService, private etudiantService: EtudiantService) { }
 
   ngOnInit(): void {
-    this.classeService.canUploadClassesFile()
+    this.etudiantService.canUploadEtudiantsFile()
       .then(
         result =>{
           this.can_upload = result;
           if(result)
           {
             this.can_upload = true;
-            this.classeService.getAllClasses()
+            this.etudiantService.getAllEtudiants()
               .then(
                 (data) =>{
-                  this.classes = data;
+                  this.etudiants = data;
                   console.log(data);
                   this.has_failed = false;
                   this.is_loading = false;
@@ -59,7 +57,7 @@ export class ClassesInputFileComponent implements OnInit {
           {
             Swal.fire({
               title: 'Fichiers requis!',
-              text: "Veuillez d'abord importer les fichiers concernant les filières et les niveaux !",
+              text: "Veuillez d'abord importer les fichiers concernant les classes !",
               icon: 'warning',
               confirmButtonText: 'OK'
             }).then(() =>{
@@ -77,9 +75,9 @@ export class ClassesInputFileComponent implements OnInit {
 
   on_extract_datas(datas_string: string)
   {
-    this.filesInputsService.extract_data_from_classes_file(datas_string)
-      .then((classes) =>{
-        const temp = this.classeService.attributeFiliereAndNiveauToClasse(classes);
+    this.filesInputsService.extract_data_from_etudiants_file(datas_string)
+      .then((etudiants) =>{
+        const temp = this.etudiantService.attributeClasseToEtudiant(etudiants);
         this.extract_datas = temp.result;
         this.bads_datas = temp.bads;
         this.should_modify = !temp.has_attributed;
@@ -118,7 +116,7 @@ export class ClassesInputFileComponent implements OnInit {
     this.is_sending = false;
     Swal.fire({
       title: 'Données enregistrées!',
-      text: "Les classes ont été importées avec succès !",
+      text: "Les étudiants ont été importés avec succès !",
       icon: 'success',
       confirmButtonText: 'OK'
     }).then(() =>{
@@ -131,19 +129,15 @@ export class ClassesInputFileComponent implements OnInit {
     this.is_sending = false;
     Swal.fire({
       title: 'Erreur!',
-      text: "Une erreur est survenue lors de l'importation des classes !",
+      text: "Une erreur est survenue lors de l'importation des étudiants !",
       icon: 'error',
       confirmButtonText: 'OK'
     });
   }
 
-  get_loaded_filieres()
+  get_loaded_classes()
   {
-    return this.classeService.filieres;
-  }
-
-  get_loaded_niveaux(){
-    return this.classeService.niveaux;
+    return this.etudiantService.classes;
   }
 
   cancel_extraction()
@@ -162,12 +156,11 @@ export class ClassesInputFileComponent implements OnInit {
       const index = this.bads_datas[i].index;
       this.extract_datas[index] = {
         ...this.extract_datas[index],
-        filiere: this.bads_datas[i].filiere,
-        niveau: this.bads_datas[i].niveau
+        classe: this.bads_datas[i].classe,
       }
     }
 
-    const temp = this.classeService.attributeFiliereAndNiveauToClasse(this.extract_datas);
+    const temp = this.etudiantService.attributeClasseToEtudiant(this.extract_datas);
     this.extract_datas = temp.result;
     this.bads_datas = temp.bads;
     this.should_modify = !temp.has_attributed;
@@ -194,24 +187,23 @@ export class ClassesInputFileComponent implements OnInit {
     });
   }
 
-  send_datas(classes: Classe[])
+  send_datas(etudiants: Etudiant[])
   {
     this.is_sending = true;
 
-    this.step = Math.ceil(100/classes.length);
+    this.step = (100/etudiants.length);
     let number_of_sends = 0;
 
-    for(let i = 0; i < classes.length; i++)
+    for(let i = 0; i < etudiants.length; i++)
     {
-      const classe = classes[i];
-      deleteProperty(classe, "filiere");
-      deleteProperty(classe, "niveau");
-      this.classeService.createNewClasse(classe)
+      const etudiant = etudiants[i];
+      deleteProperty(etudiant, "classe");
+      this.etudiantService.createNewEtudiant(etudiant)
         .then(
           (res) =>{
             console.log(res);
             ++number_of_sends;
-            this.check_sending_is_finish(number_of_sends, classes.length);
+            this.check_sending_is_finish(number_of_sends, etudiants.length);
           }
         )
         .catch((err) =>{

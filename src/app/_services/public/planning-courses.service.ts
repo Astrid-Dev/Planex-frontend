@@ -58,7 +58,7 @@ export class PlanningCoursesService{
           .then((filieres) =>{
               this.filieres = filieres;
 
-              this.classeService.getAllClasses()
+              this.classeService.getAllClassesWithEtudiants()
                 .then((classes) =>{
                   this.classes = classes;
 
@@ -175,13 +175,7 @@ export class PlanningCoursesService{
 
   getCoursesPlanningForAllClasses(){
     return new Promise((resolve, reject) =>{
-      if(this.plannings.length > 0)
-      {
-        resolve(this.plannings);
-      }
-      else
-      {
-        this.http.get(COURSE_PLANNING_URL)
+      this.http.get(COURSE_PLANNING_URL)
           .subscribe(
             res =>{
               localStorage.setItem(COURSES_PLANNING_KEY, JSON.stringify(res));
@@ -192,7 +186,6 @@ export class PlanningCoursesService{
               reject(err);
             }
           );
-      }
     });
   }
 
@@ -297,6 +290,20 @@ export class PlanningCoursesService{
     return this.classes;
   }
 
+  getAllClassesOfOneFiliere(filiereId: number)
+  {
+    let result: any = [];
+
+    this.classes.forEach((classe: any) =>{
+      if(classe.filiereId === filiereId)
+      {
+        result.push(classe);
+      }
+    });
+
+    return result;
+  }
+
   getEnseignants()
   {
     return this.enseignants;
@@ -335,5 +342,11 @@ export class PlanningCoursesService{
     }
 
     return periodes;
+  }
+
+  getPossiblesUEs(ues: any)
+  {
+    let result = [];
+
   }
 }
